@@ -18,12 +18,19 @@ local function spray_foam(pos)
 					return
 				end
 				local nn = minetest.get_node(p).name
-				if nn == "air"
-				and math.random(0,3) >= 1
-				or nn == "fire:basic_flame" then
+				if nn == "fire:basic_flame" then
 					minetest.set_node(p, {name="extinguisher:foam"})
 					fire.on_flame_remove_at(p)
 					nodeupdate(p)
+				elseif math.random(0,3) >= 1 then
+					if nn == "air" then
+						minetest.set_node(p, {name="extinguisher:foam"})
+						nodeupdate(p)
+					elseif nn == "default:lava_source" then
+						minetest.set_node(p, {name="default:obsidian"})
+					elseif nn == "default:lava_flowing" then
+						minetest.set_node(p, {name="default:cobble"})
+					end
 				end
 			end
 		end
@@ -213,7 +220,8 @@ minetest.register_globalstep(function(dtime)
 	end
 	timer = 0
 	for _,player in pairs(minetest.get_connected_players()) do
-		if player:get_wielded_item():to_string() == "extinguisher:automatic"
+		if (player:get_wielded_item():get_name() == "extinguisher:automatic"
+			or player:get_wielded_item():to_string() == "extinguisher:automatic")
 		and player:get_player_control().LMB then
 			extinguish(player)
 		end
