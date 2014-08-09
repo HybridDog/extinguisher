@@ -115,11 +115,13 @@ local function stop_all_fire_sounds()
 	end
 end
 
-local c_fire, c_foam
+local c_fire, c_foam, c_lava, c_obsidian
 local function extinguish_fire(pos)
 	local t1 = os.clock()
 	c_fire = c_fire or minetest.get_content_id("fire:basic_flame")
 	c_foam = c_foam or minetest.get_content_id("extinguisher:foam")
+	c_lava = c_lava or minetest.get_content_id("default:lava_source")
+	c_obsidian = c_obsidian or minetest.get_content_id("default:obsidian")
 	local tab = vector.explosion_table(40)
 
 	local manip = minetest.get_voxel_manip()
@@ -132,8 +134,11 @@ local function extinguish_fire(pos)
 		if not ran
 		or math.random(2) == 1 then
 			local p = area:indexp(vector.add(pos, i[1]))
-			if nodes[p] == c_fire then
+			local d_p = nodes[p]
+			if d_p == c_fire then
 				nodes[p] = c_foam
+			elseif d_p == c_lava then
+				nodes[p] = c_obisidan
 			end
 		end
 	end
@@ -220,8 +225,7 @@ minetest.register_globalstep(function(dtime)
 	end
 	timer = 0
 	for _,player in pairs(minetest.get_connected_players()) do
-		if (player:get_wielded_item():get_name() == "extinguisher:automatic"
-			or player:get_wielded_item():to_string() == "extinguisher:automatic")
+		if player:get_wielded_item():get_name() == "extinguisher:automatic"
 		and player:get_player_control().LMB then
 			extinguish(player)
 		end
