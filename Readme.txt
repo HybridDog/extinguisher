@@ -6,7 +6,7 @@ code (CC0/WTFPL) partially copied from my version of the nuke mod
 
 hold LMB to spray
 place it and then lit it with a torch near fire to let it explode
-sorry it it's less than you expected
+sorry if it's less than you expected
 
 
 TODO:
