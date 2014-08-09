@@ -115,12 +115,14 @@ local function stop_all_fire_sounds()
 	end
 end
 
-local c_fire, c_foam, c_lava, c_obsidian
+local c_fire, c_foam, c_lava, c_lavaf, c_obsidian, c_cobble
 local function extinguish_fire(pos)
 	local t1 = os.clock()
 	c_fire = c_fire or minetest.get_content_id("fire:basic_flame")
 	c_foam = c_foam or minetest.get_content_id("extinguisher:foam")
 	c_lava = c_lava or minetest.get_content_id("default:lava_source")
+	c_lavaf = c_lavaf or minetest.get_content_id("default:lava_flowing")
+	c_cobble = c_cobble or minetest.get_content_id("default:cobble")
 	c_obsidian = c_obsidian or minetest.get_content_id("default:obsidian")
 	local tab = vector.explosion_table(40)
 
@@ -139,6 +141,8 @@ local function extinguish_fire(pos)
 				nodes[p] = c_foam
 			elseif d_p == c_lava then
 				nodes[p] = c_obsidian
+			elseif d_p == c_lavaf then
+				nodes[p] = c_cobble
 			end
 		end
 	end
