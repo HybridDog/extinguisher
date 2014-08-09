@@ -47,7 +47,7 @@ local function extinguish(player)
 	local snd = minetest.sound_play(sound, {pos = playerpos, gain = 0.5, max_hear_distance = range})
 	local delay = 1
 	if pos then
-		delay = vector.straightdelay(math.max(vector.distance(startpos, pos)-0.5, 0), nuke.rocket_speed, nuke.rocket_a)
+		delay = vector.straightdelay(math.max(vector.distance(startpos, pos)-0.5, 0), v, a)
 	end
 	if not bl then
 		minetest.after(delay, function(pos)
@@ -196,6 +196,7 @@ minetest.register_node("extinguisher:automatic", {
 	drawtype = "plantlike",
 	paramtype = "light",
 	groups = {dig_immediate=2},
+	sounds = {dig=""},
 	on_punch = function(pos, _, player)
 		minetest.sound_play("extinguisher_touch", {pos=pos, gain=0.25, max_hear_distance=8})
 		if player:get_wielded_item():get_name() == "default:torch" then
