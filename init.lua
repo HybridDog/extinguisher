@@ -138,7 +138,7 @@ local function extinguish_fire(pos)
 			if d_p == c_fire then
 				nodes[p] = c_foam
 			elseif d_p == c_lava then
-				nodes[p] = c_obisidan
+				nodes[p] = c_obsidian
 			end
 		end
 	end
