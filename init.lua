@@ -161,7 +161,7 @@ local function eexpl(pos)
 		return
 	end
 	minetest.sound_play("extinguisher_explosion", {pos=pos})
-	minetest.remove_node(pos)
+	minetest.set_node(pos, {name="extinguisher:destroyed"})
 	local startpos = minetest.find_node_near(pos, 2, {"fire:basic_flame"})
 	if not startpos then
 		return
@@ -219,6 +219,16 @@ minetest.register_node("extinguisher:automatic", {
 			minetest.after(math.random()*5, eexpl, pos)
 		end
 	end
+})
+
+minetest.register_node("extinguisher:destroyed", {
+	tiles = {"extinguisher_destroyed.png"},
+	drawtype = "plantlike",
+	paramtype = "light",
+	groups = {dig_immediate=2},
+	drop = {items = {{items =
+		{"default:steel_ingot 4", "default:stick 2"}
+	}}},
 })
 
 local timer = 0
