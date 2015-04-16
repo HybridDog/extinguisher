@@ -185,6 +185,7 @@ minetest.register_node("extinguisher:foam", {
 	groups = {dig_immediate=3, puts_out_fire=1, not_in_creative_inventory=1, falling_node=1},
 })
 
+local adtime = 0
 local time = tonumber(os.clock())
 local count = 0
 minetest.register_abm({
@@ -200,7 +201,9 @@ minetest.register_abm({
 		time = tonumber(os.clock())
 		count = 0
 		minetest.remove_node(pos)
-		nodeupdate(pos)
+		if adtime < 0.1 then
+			nodeupdate(pos)
+		end
 	end,
 })
 
@@ -233,6 +236,7 @@ minetest.register_node("extinguisher:destroyed", {
 
 local timer = 0
 minetest.register_globalstep(function(dtime)
+	adtime = dtime
 	timer = timer+dtime
 	if timer < speed then
 		return
