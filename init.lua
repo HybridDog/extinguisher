@@ -192,6 +192,7 @@ minetest.register_abm({
 	nodenames = {"extinguisher:foam"},
 	interval = 5,
 	chance = 5,
+	catch_up = false,
 	action = function(pos)
 		count = count+1
 		if count > 10
