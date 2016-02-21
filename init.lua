@@ -186,7 +186,7 @@ minetest.register_node("extinguisher:foam", {
 })
 
 local adtime = 0
-local time = tonumber(os.clock())
+local time = minetest.get_us_time()
 local count = 0
 minetest.register_abm({
 	nodenames = {"extinguisher:foam"},
@@ -195,11 +195,12 @@ minetest.register_abm({
 	catch_up = false,
 	action = function(pos)
 		count = count+1
+		local ct = minetest.get_us_time()
 		if count > 10
-		and tonumber(os.clock())-time < 1 then
+		and ct-time < 1000000 then
 			return
 		end
-		time = tonumber(os.clock())
+		time = ct
 		count = 0
 		minetest.remove_node(pos)
 		if adtime < 0.1 then
