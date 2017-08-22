@@ -20,12 +20,13 @@ local function spray_foam(pos)
 				local nn = minetest.get_node(p).name
 				if nn == "fire:basic_flame" then
 					minetest.set_node(p, {name="extinguisher:foam"})
-					fire.on_flame_remove_at(p)
-					nodeupdate(p)
+					minetest.sound_play("fire_extinguish_flame",
+						{pos = p, max_hear_distance = 16, gain = 0.15})
+					minetest.check_for_falling(p)
 				elseif math.random(0,3) >= 1 then
 					if nn == "air" then
 						minetest.set_node(p, {name="extinguisher:foam"})
-						nodeupdate(p)
+						minetest.check_for_falling(p)
 					elseif nn == "default:lava_source" then
 						minetest.set_node(p, {name="default:obsidian"})
 					elseif nn == "default:lava_flowing" then
@@ -46,10 +47,11 @@ end
 local function extinguish(player)
 	--local t1 = os.clock()
 
-	local playerpos = player:getpos()
+	local playerpos = player:get_pos()
 	local dir = player:get_look_dir()
 
-	local startpos = {x=playerpos.x, y=playerpos.y+1.625, z=playerpos.z}
+	local startpos = vector.new(playerpos)
+	startpos.y = startpos.y+1.625
 	local bl, pos = minetest.line_of_sight(startpos, vector.add(vector.multiply(dir, range), startpos), 1)
 	local snd = minetest.sound_play(sound, {pos = playerpos, gain = 0.5, max_hear_distance = range})
 	local delay = 1
@@ -63,11 +65,11 @@ local function extinguish(player)
 	end
 	minetest.add_particle({
 		pos = startpos,
-		vel = vector.multiply(dir, v),
-		acc = vector.multiply(dir, a),
+		velocity = vector.multiply(dir, v),
+		acceleration = vector.multiply(dir, a),
 		expirationtime = delay,
 		size = 1,
-		texture = particle_texture.."^[transform"..math.random(0,7)
+		texture = particle_texture.."^[transform"..math.random(0,7),
 	})
 
 	--print("[extinguisher] my shot was calculated after "..tostring(os.clock()-t1).."s")
@@ -110,8 +112,9 @@ local function get_tab(pos)
 end]]
 
 local function stop_all_fire_sounds()
-	for _,sound in pairs(fire.sounds) do
-		minetest.sound_stop(sound.handle)
+	local players = minetest.get_connected_players()
+	for i = 1, #players do
+		fire.update_player_sound(players[i])
 	end
 end
 
@@ -204,7 +207,7 @@ minetest.register_abm({
 		count = 0
 		minetest.remove_node(pos)
 		if adtime < 0.1 then
-			nodeupdate(pos)
+			minetest.check_for_falling(pos)
 		end
 	end,
 })
@@ -223,7 +226,9 @@ minetest.register_node("extinguisher:automatic", {
 		if player:get_wielded_item():get_name() == "default:torch" then
 			minetest.after(math.random()*5, eexpl, pos)
 		end
-	end
+	end,
+	on_use = function() -- do not dig or punch nodes
+	end,
 })
 
 minetest.register_node("extinguisher:destroyed", {
