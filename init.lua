@@ -214,11 +214,36 @@ minetest.register_abm({
 
 minetest.register_node("extinguisher:automatic", {
 	description = "Extinguisher",
-	tiles = {"extinguisher.png"},
+	tiles = {"extinguisher_top.png", "extinguisher_bottom.png", "extinguisher.png",
+		"extinguisher.png^[transformFX", "extinguisher_front.png", "extinguisher_back.png"},
 	inventory_image = "extinguisher.png",
 	wield_image = "extinguisher_pipe.png",
-	drawtype = "plantlike",
 	paramtype = "light",
+	drawtype = "nodebox",
+	node_box = {
+		type = "fixed",
+		fixed = {
+			-- Main bottle
+			{-2/16, -0.5, -5/16, 3/16, 0, 0},
+			{-1/16, 0, -5/16, 2/16, 3/16, 0},
+			{-2/16, 0, -4/16, 3/16, 3/16, -1/16},
+			{-1/16, 3/16, -4/16, 2/16, 5/16, -1/16},
+			{0, 5/16, -3/16, 1/16, 6/16, -2/16},
+
+			-- Outlet
+			{0, 3/16, -1/16, 1/16, 4/16, 2/16},
+			{-1/16, 3/16, 2/16, 0, 4/16, 4/16},
+			{1/16, 3/16, 2/16, 2/16, 4/16, 4/16},
+			{0, 4/16, 2/16, 1/16, 5/16, 6/16},
+			{0, 2/16, 2/16, 1/16, 3/16, 6/16},
+
+			-- Handle
+			{0, 6/16, -6/16, 1/16, 7/16, -1/16},
+			{-1/16, 6/16, -3/16, 2/16, 7/16, -2/16},
+			{0, 5/16, -7/16, 1/16, 6/16, -5/16},
+			{0, 4/16, -7/16, 1/16, 5/16, -6/16},
+		},
+	},
 	groups = {dig_immediate=2},
 	sounds = {dig=""},
 	on_punch = function(pos, _, player)

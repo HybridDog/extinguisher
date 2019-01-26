@@ -10,5 +10,4 @@ sorry if it's less than you expected
 
 
 TODO:
-— use a nodebox with textures fitting for it for the extinguisher
 — some automatic shooting extinguisher node
