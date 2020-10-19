@@ -39,11 +39,6 @@ local function spray_foam(pos)
 	lastp = vector.new(smp)
 end
 
-local function extinguish_node(pos, player, sound)
-	minetest.sound_stop(sound)
-	spray_foam(pos)
-end
-
 local function extinguish(player)
 	--local t1 = os.clock()
 
@@ -52,16 +47,21 @@ local function extinguish(player)
 
 	local startpos = vector.new(playerpos)
 	startpos.y = startpos.y+1.625
-	local bl, pos = minetest.line_of_sight(startpos, vector.add(vector.multiply(dir, range), startpos), 1)
-	local snd = minetest.sound_play(sound, {pos = playerpos, gain = 0.5, max_hear_distance = range})
+	local bl, pos = minetest.line_of_sight(startpos,
+		vector.add(vector.multiply(dir, range), startpos), 1)
+	local snd = minetest.sound_play(sound,
+		{pos = playerpos, gain = 0.5, max_hear_distance = range})
 	local delay = 1
 	if pos then
-		delay = vector.straightdelay(math.max(vector.distance(startpos, pos)-0.5, 0), v, a)
+		delay = vector.straightdelay(
+			math.max(vector.distance(startpos, pos)-0.5, 0), v, a)
 	end
 	if not bl then
-		minetest.after(delay, function(pos)
-			extinguish_node(vector.round(pos), player, snd)
-		end, pos, player, snd)
+		minetest.after(delay, function()
+			-- Extinguish the node
+			minetest.sound_stop(snd)
+			spray_foam(vector.round(pos))
+		end)
 	end
 	minetest.add_particle({
 		pos = startpos,
@@ -130,7 +130,8 @@ local function extinguish_fire(pos)
 	local tab = vector.explosion_table(40)
 
 	local manip = minetest.get_voxel_manip()
-	local emerged_pos1, emerged_pos2 = manip:read_from_map(vector.add(pos, -40), vector.add(pos, 40))
+	local emerged_pos1, emerged_pos2 = manip:read_from_map(vector.add(pos, -40),
+		vector.add(pos, 40))
 	local area = VoxelArea:new({MinEdge=emerged_pos1, MaxEdge=emerged_pos2})
 	local nodes = manip:get_data()
 
@@ -153,7 +154,8 @@ local function extinguish_fire(pos)
 	manip:set_data(nodes)
 	manip:write_to_map()
 	stop_all_fire_sounds()
-	print(string.format("[extinguisher] exploded at ("..pos.x.."|"..pos.y.."|"..pos.z..") after ca. %.2fs", os.clock() - t1))
+	print(string.format("[extinguisher] exploded at %s after ca. %.2fs",
+		minetest.pos_to_string(pos), os.clock() - t1))
 	--[[t1 = os.clock()
 	manip:update_map()
 	print(string.format("[extinguisher] map updated after ca. %.2fs", os.clock() - t1))]]
