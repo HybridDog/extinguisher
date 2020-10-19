@@ -3,20 +3,15 @@ local v = 1
 local a = 100
 local speed = 0.1 --0 or less for default maximum speed
 
-local particle_texture = "extinguisher_shot.png"
-local sound = "extinguisher"
-local lastp = vector.zero
-
 local function spray_foam(pos)
-	local smp
+	if minetest.get_node(pos).name == "extinguisher:foam" then
+		-- Do not spray foam onto foam
+		return
+	end
 	for z = -1,1 do
 		for y = -1,1 do
 			for x = -1,1 do
 				local p = {x=pos.x+x, y=pos.y+y, z=pos.z+z}
-				smp = vector.round(vector.divide(p, 3))
-				if vector.equals(smp, lastp) then
-					return
-				end
 				local nn = minetest.get_node(p).name
 				if nn == "fire:basic_flame" then
 					minetest.set_node(p, {name="extinguisher:foam"})
@@ -36,7 +31,6 @@ local function spray_foam(pos)
 			end
 		end
 	end
-	lastp = vector.new(smp)
 end
 
 local function extinguish(player)
@@ -49,15 +43,15 @@ local function extinguish(player)
 	startpos.y = startpos.y+1.625
 	local bl, pos = minetest.line_of_sight(startpos,
 		vector.add(vector.multiply(dir, range), startpos), 1)
-	local snd = minetest.sound_play(sound,
+	local snd = minetest.sound_play("extinguisher",
 		{pos = playerpos, gain = 0.5, max_hear_distance = range})
-	local delay = 1
+	local flight_time = 1
 	if pos then
-		delay = vector.straightdelay(
-			math.max(vector.distance(startpos, pos)-0.5, 0), v, a)
+		local s = math.max(vector.distance(startpos, pos)-0.5, 0)
+		flight_time = (math.sqrt(v * v + 2 * a * s) - v) / a
 	end
 	if not bl then
-		minetest.after(delay, function()
+		minetest.after(flight_time, function()
 			-- Extinguish the node
 			minetest.sound_stop(snd)
 			spray_foam(vector.round(pos))
@@ -67,9 +61,9 @@ local function extinguish(player)
 		pos = startpos,
 		velocity = vector.multiply(dir, v),
 		acceleration = vector.multiply(dir, a),
-		expirationtime = delay,
+		expirationtime = flight_time,
 		size = 1,
-		texture = particle_texture.."^[transform"..math.random(0,7),
+		texture = "extinguisher_shot.png^[transform" .. math.random(0,7),
 	})
 
 	--print("[extinguisher] my shot was calculated after "..tostring(os.clock()-t1).."s")
@@ -299,35 +293,37 @@ minetest.register_craftitem("extinguisher:foam_bucket", {
 	inventory_image = "extinguisher_foam_bucket.png",
 })
 
-minetest.register_craft({
-	output = "extinguisher:foam_ingredient_1 2",
-	recipe = {
-		{"default:stone"},
-		{"poisonivy:climbing"},
-		{"default:stone"},
-	},
-	replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
-})
+if minetest.registered_items["poisonivy:climbing"] then
+	minetest.register_craft({
+		output = "extinguisher:foam_ingredient_1 2",
+		recipe = {
+			{"default:stone"},
+			{"poisonivy:climbing"},
+			{"default:stone"},
+		},
+		replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
+	})
 
-minetest.register_craft({
-	output = "extinguisher:foam_ingredient_2",
-	recipe = {
-		{"default:stone"},
-		{"poisonivy:seedling"},
-		{"default:stone"},
-	},
-	replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
-})
+	minetest.register_craft({
+		output = "extinguisher:foam_ingredient_2",
+		recipe = {
+			{"default:stone"},
+			{"poisonivy:seedling"},
+			{"default:stone"},
+		},
+		replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
+	})
 
-minetest.register_craft({
-	output = "extinguisher:foam_ingredient_2 3",
-	recipe = {
-		{"default:stone"},
-		{"poisonivy:sproutling"},
-		{"default:stone"},
-	},
-	replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
-})
+	minetest.register_craft({
+		output = "extinguisher:foam_ingredient_2 3",
+		recipe = {
+			{"default:stone"},
+			{"poisonivy:sproutling"},
+			{"default:stone"},
+		},
+		replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
+	})
+end
 
 minetest.register_craft({
 	output = "extinguisher:foam_bucket",
