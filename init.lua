@@ -178,7 +178,7 @@ minetest.register_node("extinguisher:foam", {
 			{-0.5, -0.5, -0.5, 0.5, 0.5, 0.5},
 		}
 	},
-	use_texture_alpha = true,
+	use_texture_alpha = "blend",
 	tiles = {"extinguisher_foam.png"},
 	drop = "",
 	groups = {dig_immediate=3, puts_out_fire=1, not_in_creative_inventory=1, falling_node=1},
@@ -210,8 +210,10 @@ minetest.register_abm({
 
 minetest.register_node("extinguisher:automatic", {
 	description = "Extinguisher",
-	tiles = {"extinguisher_top.png", "extinguisher_bottom.png", "extinguisher.png",
-		"extinguisher.png^[transformFX", "extinguisher_front.png", "extinguisher_back.png"},
+	tiles = {"extinguisher_top.png", "extinguisher_bottom.png",
+		"extinguisher.png", "extinguisher.png^[transformFX",
+		"extinguisher_front.png", "extinguisher_back.png"},
+	use_texture_alpha = "opaque",
 	inventory_image = "extinguisher.png",
 	wield_image = "extinguisher_pipe.png",
 	paramtype = "light",
