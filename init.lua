@@ -1,7 +1,7 @@
 local range = 100
 local v = 1
 local a = 100
-local speed = 0.1 --0 or less for default maximum speed
+local fire_rate = 0.1
 
 local function spray_foam(pos)
 	if minetest.get_node(pos).name == "extinguisher:foam" then
@@ -234,10 +234,10 @@ local timer = 0
 minetest.register_globalstep(function(dtime)
 	adtime = dtime
 	timer = timer+dtime
-	if timer < speed then
+	if timer < fire_rate then
 		return
 	end
-	timer = 0
+	timer = timer % fire_rate
 	for _,player in pairs(minetest.get_connected_players()) do
 		if player:get_wielded_item():get_name() == "extinguisher:automatic"
 		and player:get_player_control().LMB then
