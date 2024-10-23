@@ -1,5 +1,34 @@
-explosion sounds (CC0) from https://freesound.org/people/tommccann/sounds/235968/
-touch sounds (CC0) from http://freesound.org/people/talesjc/sounds/152572/
-extinguish sounds (CC0) from http://freesound.org/people/Planet-Leader/sounds/155516/
-textures (CC0) made with the GNU image manipulation program
-code (CC0) partially copied from my version of the nuke mod
+Sounds
+
+extinguisher.*.ogg
+source: https://freesound.org/people/Planet-Leader/sounds/155516/
+accessed at: 2024-10-23T15+00:00
+title: FireExtinguisher.wav
+author: Planet-Leader
+SPDX-License-Identifier: CC0-1.0
+
+extinguisher_explosion.*.ogg
+source: https://freesound.org/people/tommccann/sounds/235968/
+accessed at: 2024-10-23T15+00:00
+title: Explosion_01.wav
+author: tommccann
+SPDX-License-Identifier: CC0-1.0
+
+extinguisher_touch.*.ogg
+source: https://freesound.org/people/talesjc/sounds/152572/
+accessed at: 2024-10-23T15+00:00
+title: Bell from a fire extinguisher.wav
+author: talesjc
+SPDX-License-Identifier: CC0-1.0
+
+
+Textures
+
+All textures are hand-drawn by HybridDog with the GNU image manipulation
+program.
+SPDX-License-Identifier: CC0-1.0
+
+
+Code
+
+SPDX-License-Identifier: CC0-1.0
