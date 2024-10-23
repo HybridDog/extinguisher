@@ -26,9 +26,9 @@ Textures
 
 All textures are hand-drawn by HybridDog with the GNU image manipulation
 program.
-SPDX-License-Identifier: CC0-1.0
+SPDX-License-Identifier: CC-BY-4.0
 
 
 Code
 
-SPDX-License-Identifier: CC0-1.0
+SPDX-License-Identifier: MIT
