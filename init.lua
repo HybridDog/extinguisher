@@ -34,8 +34,6 @@ local function spray_foam(pos)
 end
 
 local function extinguish(player)
-	--local t1 = os.clock()
-
 	local playerpos = player:get_pos()
 	local dir = player:get_look_dir()
 
@@ -65,45 +63,7 @@ local function extinguish(player)
 		size = 1,
 		texture = "extinguisher_shot.png^[transform" .. math.random(0,7),
 	})
-
-	--print("[extinguisher] my shot was calculated after "..tostring(os.clock()-t1).."s")
 end
-
-
---[[
-local function table_empty(t)
-	for _,_ in pairs(t) do
-		return false
-	end
-	return true
-end
-
-local function get_tab(pos)
-	local tab_tmp = {pos}
-	local tab_avoid = {[pos.x.." "..pos.y.." "..pos.z] = true}
-	local tab_done,num = {pos},2
-	while not table_empty(tab_tmp) do
-		for n,p in pairs(tab_tmp) do
-			tab_tmp[n] = nil
-			for z = -2,2 do
-				for y = -2,2 do
-					for x = -2,2 do
-						local p2 = {x=pos.x+x, y=pos.y+y, z=pos.z+z}
-						local pstr = p2.x.." "..p2.y.." "..p2.z
-						if not tab_avoid[pstr]
-						and minetest.get_node(p2).name == "fire:basic_flame" then
-							tab_avoid[pstr] = true
-							tab_done[num] = p2
-							num = num+1
-							table.insert(tab_tmp, p2)
-						end
-					end
-				end
-			end
-		end
-	end
-	return tab_done
-end]]
 
 local function stop_all_fire_sounds()
 	local players = minetest.get_connected_players()
