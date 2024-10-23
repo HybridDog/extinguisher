@@ -115,32 +115,41 @@ end
 local c_fire, c_foam, c_lava, c_lavaf, c_obsidian, c_cobble
 local function extinguish_fire(pos)
 	local t1 = os.clock()
+	-- Size of the extinguishment
+	local r = 40
 	c_fire = c_fire or minetest.get_content_id("fire:basic_flame")
 	c_foam = c_foam or minetest.get_content_id("extinguisher:foam")
 	c_lava = c_lava or minetest.get_content_id("default:lava_source")
 	c_lavaf = c_lavaf or minetest.get_content_id("default:lava_flowing")
 	c_cobble = c_cobble or minetest.get_content_id("default:cobble")
 	c_obsidian = c_obsidian or minetest.get_content_id("default:obsidian")
-	local tab = vector.explosion_table(40)
 
 	local manip = minetest.get_voxel_manip()
-	local emerged_pos1, emerged_pos2 = manip:read_from_map(vector.add(pos, -40),
-		vector.add(pos, 40))
+	local emerged_pos1, emerged_pos2 = manip:read_from_map(vector.add(pos, -r),
+		vector.add(pos, r))
 	local area = VoxelArea:new({MinEdge=emerged_pos1, MaxEdge=emerged_pos2})
 	local nodes = manip:get_data()
 
-	for _,i in pairs(tab) do
-		local ran = i[2]
-		if not ran
-		or math.random(2) == 1 then
-			local p = area:indexp(vector.add(pos, i[1]))
-			local d_p = nodes[p]
-			if d_p == c_fire then
-				nodes[p] = c_foam
-			elseif d_p == c_lava then
-				nodes[p] = c_obsidian
-			elseif d_p == c_lavaf then
-				nodes[p] = c_cobble
+	for z = -r, r do
+		for y = -r, r do
+			for x = -r, r do
+				local dist_sqr = x * x + y * y + z * z
+				if dist_sqr <= r * r + r then
+					local near_border =
+						math.floor(math.sqrt(dist_sqr) + 0.5) > r - 1
+					if not near_border
+					or math.random(2) == 1 then
+						local vi = area:index(pos.x + x, pos.y + y, pos.z + z)
+						local d_p = nodes[vi]
+						if d_p == c_fire then
+							nodes[vi] = c_foam
+						elseif d_p == c_lava then
+							nodes[vi] = c_obsidian
+						elseif d_p == c_lavaf then
+							nodes[vi] = c_cobble
+						end
+					end
+				end
 			end
 		end
 	end
@@ -150,9 +159,6 @@ local function extinguish_fire(pos)
 	stop_all_fire_sounds()
 	print(string.format("[extinguisher] exploded at %s after ca. %.2fs",
 		minetest.pos_to_string(pos), os.clock() - t1))
-	--[[t1 = os.clock()
-	manip:update_map()
-	print(string.format("[extinguisher] map updated after ca. %.2fs", os.clock() - t1))]]
 end
 
 local function eexpl(pos)
