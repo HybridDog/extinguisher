@@ -261,7 +261,8 @@ minetest.register_craftitem("extinguisher:foam_bucket", {
 	inventory_image = "extinguisher_foam_bucket.png",
 })
 
-if minetest.registered_items["poisonivy:climbing"] then
+if minetest.registered_items["poisonivy:climbing"]
+and minetest.registered_items["bucket:bucket_water"] then
 	minetest.register_craft({
 		output = "extinguisher:foam_ingredient_1 2",
 		recipe = {
@@ -269,7 +270,8 @@ if minetest.registered_items["poisonivy:climbing"] then
 			{"poisonivy:climbing"},
 			{"default:stone"},
 		},
-		replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
+		replacements = {{"default:stone", "default:stone"},
+			{"default:stone", "default:stone"}},
 	})
 
 	minetest.register_craft({
@@ -279,7 +281,8 @@ if minetest.registered_items["poisonivy:climbing"] then
 			{"poisonivy:seedling"},
 			{"default:stone"},
 		},
-		replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
+		replacements = {{"default:stone", "default:stone"},
+			{"default:stone", "default:stone"}},
 	})
 
 	minetest.register_craft({
@@ -289,35 +292,34 @@ if minetest.registered_items["poisonivy:climbing"] then
 			{"poisonivy:sproutling"},
 			{"default:stone"},
 		},
-		replacements = {{"default:stone", "default:stone"}, {"default:stone", "default:stone"}},
+		replacements = {{"default:stone", "default:stone"},
+			{"default:stone", "default:stone"}},
+	})
+
+	minetest.register_craft({
+		output = "extinguisher:foam_bucket",
+		recipe = {
+			{"extinguisher:foam_ingredient_1"},
+			{"extinguisher:foam_ingredient_2"},
+			{"bucket:bucket_water"},
+		},
+	})
+
+	minetest.register_craft({
+		output = "extinguisher:foam_bucket",
+		recipe = {
+			{"extinguisher:foam_ingredient_2"},
+			{"extinguisher:foam_ingredient_1"},
+			{"bucket:bucket_water"},
+		},
+	})
+
+	minetest.register_craft({
+		output = "extinguisher:automatic",
+		recipe = {
+			{"group:stick", "", ""},
+			{"default:steel_ingot", "group:stick", "group:stick"},
+			{"extinguisher:foam_bucket", "", ""},
+		},
 	})
 end
-
-minetest.register_craft({
-	output = "extinguisher:foam_bucket",
-	recipe = {
-		{"extinguisher:foam_ingredient_1"},
-		{"extinguisher:foam_ingredient_2"},
-		{"bucket:bucket_water"},
-	},
-})
-
-minetest.register_craft({
-	output = "extinguisher:foam_bucket",
-	recipe = {
-		{"extinguisher:foam_ingredient_2"},
-		{"extinguisher:foam_ingredient_1"},
-		{"bucket:bucket_water"},
-	},
-})
-
-minetest.register_craft({
-	output = "extinguisher:automatic",
-	recipe = {
-		{"group:stick", "", ""},
-		{"default:steel_ingot", "group:stick", "group:stick"},
-		{"extinguisher:foam_bucket", "", ""},
-	},
-})
-
-
