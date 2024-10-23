@@ -1,4 +1,0 @@
-bucket
-default
-vector_extras
-poisonivy?
